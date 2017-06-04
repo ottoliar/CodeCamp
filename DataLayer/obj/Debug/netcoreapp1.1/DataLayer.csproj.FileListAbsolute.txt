@@ -1,0 +1,14 @@
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\bin\Debug\netcoreapp1.1\DataLayer.deps.json
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\bin\Debug\netcoreapp1.1\DataLayer.dll
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\bin\Debug\netcoreapp1.1\DataLayer.pdb
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.csprojResolveAssemblyReference.cache
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.AssemblyInfo.cs
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.dll
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.pdb
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\bin\Debug\netcoreapp1.1\DataLayer.deps.json
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\bin\Debug\netcoreapp1.1\DataLayer.dll
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\bin\Debug\netcoreapp1.1\DataLayer.pdb
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.csprojResolveAssemblyReference.cache
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.AssemblyInfo.cs
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.dll
+C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\DataLayer\obj\Debug\netcoreapp1.1\DataLayer.pdb
