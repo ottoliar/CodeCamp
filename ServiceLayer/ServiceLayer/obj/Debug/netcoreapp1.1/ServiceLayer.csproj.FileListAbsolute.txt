@@ -1,8 +1,0 @@
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\bin\Debug\netcoreapp1.1\ServiceLayer.deps.json
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\bin\Debug\netcoreapp1.1\ServiceLayer.runtimeconfig.json
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\bin\Debug\netcoreapp1.1\ServiceLayer.runtimeconfig.dev.json
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\bin\Debug\netcoreapp1.1\ServiceLayer.dll
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\bin\Debug\netcoreapp1.1\ServiceLayer.pdb
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\obj\Debug\netcoreapp1.1\ServiceLayer.AssemblyInfo.cs
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\obj\Debug\netcoreapp1.1\ServiceLayer.dll
-C:\Users\rottolia\Documents\Visual Studio 2017\Projects\CodeCamp\ServiceLayer\ServiceLayer\obj\Debug\netcoreapp1.1\ServiceLayer.pdb

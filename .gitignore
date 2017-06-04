@@ -1,4 +1,4 @@
 DataLayer/bin/Debug
 DataLayer/obj/Debug
-ServiceLayer/ServiceLayer/bin/Debug
-ServiceLayer/ServiceLayer/obj/Debug
+ServiceLayer/ServiceLayer/bin/*
+ServiceLayer/ServiceLayer/obj/*
