@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
+using ServiceLayer.Filters;
 using ServiceLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 namespace ServiceLayer.Controllers
 {
     [Route("api/[controller]")]
+    [ValidateModel]
     public class CampsController : BaseController
     {
         private ICampRepository _repo;
@@ -31,24 +33,24 @@ namespace ServiceLayer.Controllers
             return Ok(_mapper.Map<IEnumerable<CampModel>>(camps));
         }
 
-        [HttpGet("{id}", Name = "CampGet")]
-        public IActionResult Get(int id, bool includeSpeakers = false)
+        [HttpGet("{moniker}", Name = "CampGet")]
+        public IActionResult Get(string moniker, bool includeSpeakers = false)
         {
             try
             {
                 Camp camp = null;
                 if (includeSpeakers)
                 {
-                    camp = _repo.GetCampWithSpeakers(id);
+                    camp = _repo.GetCampByMonikerWithSpeakers(moniker);
                 }
                 else
                 {
-                    camp = _repo.GetCamp(id);
+                    camp = _repo.GetCampByMoniker(moniker);
                 }
 
                 if (camp == null)
                 {
-                    return NotFound($"Camp {id} was not found");
+                    return NotFound($"Camp {moniker} was not found");
                 }
 
                 return Ok(_mapper.Map<CampModel>(camp));
@@ -62,17 +64,19 @@ namespace ServiceLayer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Camp model)
+        public async Task<IActionResult> Post([FromBody]CampModel model)
         {
             try
             {
                 _logger.LogInformation("Creating a new code camp.");
-                _repo.Add(model);
 
+                var camp = _mapper.Map<Camp>(model);
+
+                _repo.Add(camp);
                 if (await _repo.SaveAllAsync())
                 {
-                    var newUri = Url.Link("CampGet", new { id = model.Id });
-                    return Created(newUri, model);
+                    var newUri = Url.Link("CampGet", new { moniker = camp.Moniker });
+                    return Created(newUri, _mapper.Map<CampModel>(camp));
                 }
                 else
                 {
@@ -87,26 +91,22 @@ namespace ServiceLayer.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]Camp model)
+        [HttpPut("{moniker}")]
+        public async Task<IActionResult> Put(string moniker, [FromBody]Camp model)
         {
             try
             {
-                var oldCamp = _repo.GetCamp(id);
+                var oldCamp = _repo.GetCampByMoniker(moniker);
                 if (oldCamp == null)
                 {
-                    return NotFound($"Could not find a camp with an ID of {id}");
+                    return NotFound($"Could not find a camp with an ID of {moniker}");
                 }
 
-                oldCamp.Name = model.Name ?? oldCamp.Name;
-                oldCamp.Description = model.Description ?? oldCamp.Description;
-                oldCamp.Location = model.Location ?? oldCamp.Location;
-                oldCamp.Length = model.Length > 0 ? model.Length : oldCamp.Length;
-                oldCamp.EventDate = model.EventDate != DateTime.MinValue ? model.EventDate : oldCamp.EventDate;
+                _mapper.Map(model, oldCamp);
 
                 if (await _repo.SaveAllAsync())
                 {
-                    return Ok(oldCamp);
+                    return Ok(_mapper.Map<CampModel>(oldCamp));
                 }
             }
             catch (Exception ex)
@@ -117,15 +117,15 @@ namespace ServiceLayer.Controllers
             return BadRequest("Couldn't update camp.");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{moniker}")]
+        public async Task<IActionResult> Delete(string moniker)
         {
             try
             {
-                var oldCamp = _repo.GetCamp(id);
+                var oldCamp = _repo.GetCampByMoniker(moniker);
                 if (oldCamp == null)
                 {
-                    return NotFound($"Could not find Camp with ID of {id}");
+                    return NotFound($"Could not find Camp with ID of {moniker}");
                 }
 
                 _repo.Delete(oldCamp);
