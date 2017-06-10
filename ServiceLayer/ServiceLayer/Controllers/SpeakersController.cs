@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
@@ -18,14 +20,17 @@ namespace ServiceLayer.Controllers
         private ICampRepository _repository;
         private ILogger<SpeakersController> _logger;
         private IMapper _mapper;
+        private UserManager<CampUser> _userMgr;
 
         public SpeakersController(ICampRepository repository,
             ILogger<SpeakersController> logger,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<CampUser> userMgr)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _userMgr = userMgr;
         }
 
         [HttpGet]
@@ -48,6 +53,7 @@ namespace ServiceLayer.Controllers
             return Ok(speaker);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(string moniker, [FromBody]SpeakerModel model)
         {
@@ -59,12 +65,19 @@ namespace ServiceLayer.Controllers
                 var speaker = _mapper.Map<Speaker>(model);
                 speaker.Camp = camp;
 
-                _repository.Add(speaker);
+                var campUser = await _userMgr.FindByNameAsync(this.User.Identity.Name);
 
-                if (await _repository.SaveAllAsync())
+                if (campUser != null)
                 {
-                    var url = Url.Link("SpeakerGet", new { moniker = camp.Moniker, id = speaker.Id });
-                    return Created(url, _mapper.Map<SpeakerModel>(speaker));
+                    speaker.User = campUser;
+
+                    _repository.Add(speaker);
+
+                    if (await _repository.SaveAllAsync())
+                    {
+                        var url = Url.Link("SpeakerGet", new { moniker = camp.Moniker, id = speaker.Id });
+                        return Created(url, _mapper.Map<SpeakerModel>(speaker));
+                    }
                 }
             }
             catch (Exception ex)
@@ -86,6 +99,7 @@ namespace ServiceLayer.Controllers
                 if (speaker == null) return NotFound();
 
                 if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker and camp do not match");
+                if (speaker.User.UserName == this.User.Identity.Name) return Forbid();
 
                 _mapper.Map(model, speaker);
 
@@ -111,6 +125,7 @@ namespace ServiceLayer.Controllers
                 if (speaker == null) return NotFound();
 
                 if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker and camp do not match");
+                if (speaker.User.UserName == this.User.Identity.Name) return Forbid();
 
                 _repository.Delete(speaker);
 

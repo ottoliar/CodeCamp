@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyCodeCamp.Data;
@@ -11,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Controllers
 {
+    [Authorize]
+    [EnableCors("AnyGET")]
     [Route("api/[controller]")]
     [ValidateModel]
     public class CampsController : BaseController
@@ -63,6 +67,7 @@ namespace ServiceLayer.Controllers
             return NotFound();
         }
 
+        [EnableCors("Wildermuth")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]CampModel model)
         {

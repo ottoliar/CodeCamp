@@ -70,7 +70,6 @@ namespace MyCodeCamp.Controllers
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Failed to save new talk: {ex}");
             }
 
@@ -95,7 +94,6 @@ namespace MyCodeCamp.Controllers
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Failed to update talk: {ex}");
             }
 
@@ -120,7 +118,6 @@ namespace MyCodeCamp.Controllers
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Failed to delete talk: {ex}");
             }
 
