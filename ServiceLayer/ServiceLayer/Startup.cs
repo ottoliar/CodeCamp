@@ -5,11 +5,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using MyCodeCamp.Controllers;
 using MyCodeCamp.Data;
 using MyCodeCamp.Data.Entities;
+using MyCodeCamp.Models;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ServiceLayer
@@ -73,6 +79,23 @@ namespace ServiceLayer
                 };
             });
 
+            services.AddApiVersioning(cfg =>
+            {
+                cfg.DefaultApiVersion = new ApiVersion(1, 1);
+                cfg.AssumeDefaultVersionWhenUnspecified = true;
+                cfg.ReportApiVersions = true;
+                var rdr = new QueryStringOrHeaderApiVersionReader("ver");
+                rdr.HeaderNames.Add("X-MyCodeCamp-Version");
+                cfg.ApiVersionReader = rdr;
+
+                cfg.Conventions.Controller<TalksController>()
+                    .HasApiVersion(new ApiVersion(1, 0))
+                    .HasApiVersion(new ApiVersion(1, 1))
+                    .HasApiVersion(new ApiVersion(2, 0))
+                    .Action(m => m.Post(default(string), default(int), default(TalkModel)))
+                        .MapToApiVersion(new ApiVersion(2, 0));
+            });
+
             services.AddCors(cfg =>
             {
                 cfg.AddPolicy("Wildermuth", bldr =>
@@ -88,6 +111,11 @@ namespace ServiceLayer
                         .WithMethods("GET")
                         .AllowAnyOrigin();
                 });
+            });
+
+            services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("SuperUsers", p => p.RequireClaim("SuperUser", "True"));
             });
 
             services.AddMvc(opt =>
@@ -121,10 +149,25 @@ namespace ServiceLayer
             //        .AllowAnyMethod()
             //        .WithOrigins();
             //});
+            app.UseDeveloperExceptionPage();
 
             app.UseIdentity();
 
-            app.UseDeveloperExceptionPage();
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidIssuer = _config["Tokens:Issuer"],
+                    ValidAudience = _config["Tokens:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"])),
+                    ValidateLifetime = true
+                }
+            });
+
+
             app.UseMvc();
 
             seeder.Seed().Wait();

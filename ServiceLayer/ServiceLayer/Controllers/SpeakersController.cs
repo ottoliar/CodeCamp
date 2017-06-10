@@ -9,18 +9,21 @@ using ServiceLayer.Filters;
 using ServiceLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ServiceLayer.Controllers
 {
     [Route("api/camps/{moniker}/speakers")]
     [ValidateModel]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     public class SpeakersController : BaseController
     {
-        private ICampRepository _repository;
-        private ILogger<SpeakersController> _logger;
-        private IMapper _mapper;
-        private UserManager<CampUser> _userMgr;
+        protected ICampRepository _repository;
+        protected ILogger<SpeakersController> _logger;
+        protected IMapper _mapper;
+        protected UserManager<CampUser> _userMgr;
 
         public SpeakersController(ICampRepository repository,
             ILogger<SpeakersController> logger,
@@ -34,11 +37,21 @@ namespace ServiceLayer.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("1.0")]
         public IActionResult Get(string moniker, bool includeTalks = false)
         {
             var speakers = includeTalks ? _repository.GetSpeakersByMonikerWithTalks(moniker) : _repository.GetSpeakersByMoniker(moniker);
 
             return Ok(_mapper.Map<IEnumerable<SpeakerModel>>(speakers));
+        }
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        public virtual IActionResult GetWithCount(string moniker, bool includeTalks = false)
+        {
+            var speakers = includeTalks ? _repository.GetSpeakersByMonikerWithTalks(moniker) : _repository.GetSpeakersByMoniker(moniker);
+
+            return Ok(new { count = speakers.Count(), results = _mapper.Map<IEnumerable<SpeakerModel>>(speakers) });
         }
 
         [HttpGet("{id}", Name = "SpeakerGet")]

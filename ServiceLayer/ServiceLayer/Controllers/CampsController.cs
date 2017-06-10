@@ -68,6 +68,7 @@ namespace ServiceLayer.Controllers
         }
 
         [EnableCors("Wildermuth")]
+        [Authorize(Policy = "SuperUsers")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]CampModel model)
         {
